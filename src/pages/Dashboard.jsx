@@ -1,7 +1,5 @@
 import {
   Activity,
-  ArrowDown,
-  ArrowUp,
   Award,
   Calendar,
   ClipboardList,
@@ -30,6 +28,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import ShipmentDocumentsWidget from "../components/Dashboard/ShipmentDocumentsWidget ";
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState("weekly");
@@ -245,7 +244,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50/50 to-blue-50/30 dark:from-gray-900 dark:to-gray-800 p-4 lg:p-6 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
@@ -273,10 +272,10 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {statsCards.map((stat, index) => (
             <div
               key={index}
@@ -313,10 +312,12 @@ const Dashboard = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
+
+        <ShipmentDocumentsWidget />
 
         {/* Quick Actions - Horizontal below stats cards */}
-        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 dark:border-gray-700/50 shadow-lg mb-8">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-white/50 dark:border-gray-700/50 shadow-lg mb-8 mt-4">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-6">
             Quick Actions
           </h3>

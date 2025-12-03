@@ -1,5 +1,4 @@
 import { clsx } from "clsx";
-import Lottie from "lottie-react";
 import {
   BarChart3,
   BookOpenCheck,
@@ -11,16 +10,15 @@ import {
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import truckAnimation from "../../assets/lottieflow-ecommerce.json";
 
-import logo from '../../assets/Ganapathy_metals_logo.png';
+import logo from "../../assets/Ganapathy_metals_logo.png";
 
 const Sidebar = () => {
   const sidebarOpen = useSelector((state) => state.ui.sidebarOpen);
 
   const navigation = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
-    { name: "Masters", href: "/masters", icon: BookOpenCheck },
+    { name: "Setup", href: "/masters", icon: BookOpenCheck },
     { name: "Certificate", href: "/certificate", icon: PackagePlus },
     { name: "Forms", href: "/forms", icon: PackageCheck },
     { name: "Invoice", href: "/invoice", icon: Wrench },
@@ -43,11 +41,11 @@ const Sidebar = () => {
           <div className="w-12 h-12 rounded-xl shadow-md flex items-center justify-center">
             {/* <Lottie animationData={truckAnimation} loop autoplay /> */}
 
-             <img
-                src={logo}
-                alt="Ganapathy Metal Logo"
-                className="w-12 h-12 object-contain" // adjust size as needed
-              />
+            <img
+              src={logo}
+              alt="Ganapathy Metal Logo"
+              className="w-12 h-12 object-contain" // adjust size as needed
+            />
           </div>
 
           {sidebarOpen && (
