@@ -1,102 +1,145 @@
-import ReusableComponent from "../../../utils/ReusableComponent";
+import { useState, useEffect } from "react";
+import ReusableComponent from "../../../utils/ReusableComponent.jsx";
+import apiClient from "../../../api/apiClient.js";
+import { toast } from 'react-hot-toast'
 
-const ExportersMaster = () => {
-  const initialExporters = [
-    {
-      id: 1,
-      name: "GANAPATHY METAL SDN BHD",
-      address:
-        "NO: 37, PERSIARAN SEGAMBUT TENGAH, SEGAMBUT INDUSTRIAL PARK, 51200 KUALA LUMPUR, MALAYSIA.",
-      contactPerson: "Mr. Rajesh Kumar",
-      phone: "+60 3 6242 1899",
-      email: "info@ganapathymetal.com",
-      taxId: "T1234567890",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "MALAYSIA EXPORT ENTERPRISE",
-      address: "LOT 123, JALAN INDUSTRI, 47500 SUBANG JAYA, SELANGOR",
-      contactPerson: "Ms. Sarah Lim",
-      phone: "+60 3 5634 7890",
-      email: "sales@malaysiaexport.com",
-      taxId: "T9876543210",
-      status: "Active",
-    },
-  ];
+const PortMaster = () => {
+
+  const [exportData, setExportData] = useState([]);
+  const orgId = Number(localStorage.getItem("orgId"));
+  const branch = localStorage.getItem("branch");
+  const branchCode = localStorage.getItem("branchCode");
+  const userName = (localStorage.getItem("userName"));
+ const [currentItem, setCurrentItem] = useState({
+   companyName:'',
+   shortName:'',
+   contactPerson:'',
+   phone:'',
+   email:'',
+   address:'',
+   taxId:'',
+   status:"Active"
+ }); 
+  
+const getAllExport = async () => {
+  try {
+    const res = await apiClient.get(
+      `/api/exporter/getAllExportersByOrgId?branchCode=${branchCode}&count=10&orgId=${orgId }&page=1`
+    );
+    const exports = res.paramObjectsMap.exportersVO.data || [];
+    setExportData(exports.reverse()); 
+    console.log("Ports Data from API:", exports); 
+    return exports;
+  } catch (err) {
+    console.error("Ports API Error:", err);
+    setExportData([]);
+    return [];
+  }
+};
+
+
+
+const createExport = async (formData) => {
+  try {
+    const form = {
+      ...formData,
+      orgId: orgId,
+      createdBy: userName,
+      branch: branch,
+      branchCode: branchCode
+    };
+
+    await apiClient.put(`/api/exporter/createUpdateExporter`, form);
+    await getAllExport();
+    toast.success("created successfully");
+ 
+  } catch(err) {
+    console.error("Create API Error:", err);
+    toast.error("Error creating port");
+  }
+};
+
+
+
+const editExport = async (id) => {
+  try {
+    const res = await apiClient.get(`/api/exporter/getByIdExporter?id=${id}`);
+    const data = res.paramObjectsMap.exporterVO;
+    setCurrentItem({
+      id: data.id,
+      companyName: data.companyName,
+      shortName: data.shortName,
+      contactPerson:data.contactPerson,
+      phone: data.phone, 
+      email:data.email,
+      address:data.address,
+      taxId:data.taxId,
+      status: data.status,
+    });
+  } catch(err) {
+    console.error("Error fetching port by ID", err);
+  }
+};
+
+const updateExport = async (id, formData) => {
+  try {
+    const updateForm = {
+      ...formData,
+      id: id,
+      orgId: orgId,
+      createdBy: userName,
+      branch: branch,
+      branchCode: branchCode
+    };
+
+    await apiClient.put(`/api/exporter/createUpdateExporter`, updateForm);
+    await getAllExport();
+    toast.success("Update successfully");
+
+  } catch (err) {
+    console.error("Update API Error:", err);
+    toast.error("Error updating port");
+  }
+};
+
+
+  useEffect(() => {
+    getAllExport();
+  }, []);
 
   const exporterFields = [
-    {
-      name: "name",
-      label: "Company Name",
-      required: true,
-      placeholder: "Enter company name",
-      colSpan: 3,
-    },
-    {
-      name: "contactPerson",
-      label: "Contact Person",
-      placeholder: "Enter contact person",
-      colSpan: 2,
-      subField: "phone",
-    },
-    {
-      name: "taxId",
-      label: "Tax ID",
-      placeholder: "Enter tax ID",
-      colSpan: 2,
-      subField: "email",
-    },
-    {
-      name: "status",
-      label: "Status",
-      type: "select",
-      options: [
-        { value: "Active", label: "Active" },
-        { value: "Inactive", label: "Inactive" },
-      ],
-      colSpan: 2,
-    },
-    {
-      name: "address",
-      label: "Address",
-      placeholder: "Enter full address",
-      fullWidth: true,
-    },
-    {
-      name: "phone",
-      label: "Phone",
-      type: "tel",
-      placeholder: "Enter phone number",
-    },
-    {
-      name: "email",
-      label: "Email",
-      type: "email",
-      placeholder: "Enter email address",
-    },
+    { name: "companyName", label: "Company Name", required: true, placeholder: "Enter Company Name", colSpan: 2 },
+    { name: "shortName", label: "Short Name", required: true, placeholder: "Enter Short Name", colSpan: 2 },
+    { name: "contactPerson", label: "Contact Person", required: true, placeholder: "Enter Contact Person", colSpan: 2 },
+    { name: "phone", label: "Phone Number", required: true, placeholder: "Enter Phone Number", colSpan: 2 },
+    { name: "email", label: "Email", required: true, placeholder: "Enter Email", colSpan: 2 },
+    { name: "address", label: "Address", required: true, placeholder: "Enter Address", colSpan: 2 },
+    { name: "taxId", label: "Tax Id", required: true, placeholder: "Enter Tax Id", colSpan: 2 },
+    { name: "status", label: "Status", type: "select", colSpan: 2,  options: [
+      { value:'Active', label:'Active' }, 
+      { value:'Inactive', label:'Inactive' }
+    ]}
   ];
 
-  const handleExport = () => {
-    console.log("Export functionality");
-    // Implement export logic here
-  };
-
-  const handleImport = () => {
-    console.log("Import functionality");
-    // Implement import logic here
-  };
+  const handleExport = () => console.log("Export clicked");
+  const handleImport = () => console.log("Import clicked");
 
   return (
     <ReusableComponent
-      title="Exporters"
-      initialData={initialExporters}
+      title="Export"
+      initialData={exportData} 
       fields={exporterFields}
-      searchableFields={["name", "contactPerson", "taxId", "email"]}
-      onExport={handleExport}
+      searchableFields={["companyName","shortName","contactPerson","phone","email","address","taxId","status"]}
+      getAll={getAllExport} 
+      create={createExport}
+      update={updateExport}
+      onRowEdit={editExport}
+      editData={currentItem}
       onImport={handleImport}
+      onExport={handleExport}
     />
   );
 };
 
-export default ExportersMaster;
+export default PortMaster;
+

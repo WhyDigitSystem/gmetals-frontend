@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import {Toaster} from "react-hot-toast"
 import { Provider, useSelector } from "react-redux";
 import {
   Navigate,
@@ -46,6 +47,10 @@ import InvoiceListing from "./components/invoice/invoice";
 import ExportersMaster from "./components/masters/exporter/Exporter";
 import OrderBooking from "./components/order-booking/OrderBooking";
 import Invoice from "./components/invoice/InvoiceForm";
+import PortMaster from './components/masters/port/PortMaster';
+import Vessel from "./components/masters/vessel/Vessel";
+import Commodity from "./components/masters/commodity/Commodity";
+import Party from '../src/components/masters/party/Party'
 
 // Theme initializer component
 const ThemeInitializer = () => {
@@ -152,6 +157,12 @@ const AppContent = () => {
                     <Route path="/reports" element={<ReportsList />} />
                     <Route path="/setup" element={<Setup />} />
                     <Route path="/exporter" element={<ExportersMaster />} />
+                    <Route path="/port" element={<PortMaster />} />
+                    <Route path="/vessel" element={<Vessel />} />
+                    <Route path="/commodity" element={<Commodity />} />
+                    <Route path="/party" element={<Party />} />
+
+
                     <Route
                       path="/certificate"
                       element={<CertificateListing />}
@@ -185,7 +196,9 @@ const AppContent = () => {
 
 function App() {
   return (
+
     <Provider store={store}>
+   <Toaster position="top-right"/>
       <AppContent />
     </Provider>
   );

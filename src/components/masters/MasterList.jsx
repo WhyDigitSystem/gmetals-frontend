@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import {
   Anchor,
   Briefcase,
@@ -14,10 +14,35 @@ import {
   Search,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import apiClient from '../../../src/api/apiClient'
 
 const MastersList = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  // 
+  const orgId = Number(localStorage.getItem("orgId"));
+  const [vessel,setVessel] = useState(0);
+
+  const getAllVessel = async () => {
+  try {
+    const res = await apiClient.get(
+      `/api/master/getAllVesselByOrgId?orgId=${orgId}&page=1&size=10`
+    );
+    const data = res.paramObjectsMap.vesselVO || [];
+    setVessel(data.totalCount); 
+    console.log("Ports Data from API:", vessel); 
+    // return vessel;
+  } catch (err) {
+    console.error("Ports API Error:", err);
+    setVessel([]);
+    // return [];
+  }
+};
+
+useEffect(()=>{
+  getAllVessel()
+},[])
+  // 
 
   const masters = [
     {
@@ -53,7 +78,7 @@ const MastersList = () => {
       icon: <Anchor className="w-4 h-4" />,
       color: "from-amber-500 to-orange-500",
       bgColor: "bg-amber-50 dark:bg-amber-900/20",
-      path: "/masters/port",
+      path: "/port",
       count: 36,
     },
     {
@@ -71,8 +96,8 @@ const MastersList = () => {
       icon: <Navigation className="w-4 h-4" />,
       color: "from-red-500 to-rose-500",
       bgColor: "bg-red-50 dark:bg-red-900/20",
-      path: "/masters/vessel",
-      count: 29,
+      path: "/vessel",
+      count: vessel,
     },
     {
       id: 7,
@@ -107,7 +132,7 @@ const MastersList = () => {
       icon: <Package className="w-4 h-4" />,
       color: "from-orange-500 to-amber-500",
       bgColor: "bg-orange-50 dark:bg-orange-900/20",
-      path: "/masters/commodity",
+      path: "/commodity",
       count: 58,
     },
   ];
